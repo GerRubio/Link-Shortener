@@ -1,3 +1,7 @@
+# IDEA
+.idea
+
+# Laravel
 /vendor/
 node_modules/
 npm-debug.log
