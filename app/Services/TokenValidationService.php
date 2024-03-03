@@ -9,31 +9,16 @@ class TokenValidationService
         $stack = [];
 
         foreach (str_split($token) as $char) {
-            switch ($char) {
-                case '(':
-                case '{':
-                case '[':
-                    $stack[] = $char;
+            $result = match($char) {
+                '(', '{', '[' => array_push($stack, $char),
+                ')' => empty($stack) || array_pop($stack) !== '(' ? false : null,
+                '}' => empty($stack) || array_pop($stack) !== '{' ? false : null,
+                ']' => empty($stack) || array_pop($stack) !== '[' ? false : null,
+                default => null,
+            };
 
-                    break;
-                case ')':
-                    if (empty($stack) || array_pop($stack) !== '(') {
-                        return false;
-                    }
-
-                    break;
-                case '}':
-                    if (empty($stack) || array_pop($stack) !== '{') {
-                        return false;
-                    }
-
-                    break;
-                case ']':
-                    if (empty($stack) || array_pop($stack) !== '[') {
-                        return false;
-                    }
-
-                    break;
+            if ($result === false) {
+                return false;
             }
         }
 
